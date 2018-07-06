@@ -8,11 +8,14 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    @IBOutlet weak var chessboardCollectionView: UICollectionView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        chessboardCollectionView.dataSource = self
+        chessboardCollectionView.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -20,6 +23,21 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 64
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        //Whats gonna be in each cell
+        let cell = chessboardCollectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! chessSquare
+        
+        cell.cellImage.image = UIImage(named: "clearness")
+        print("im here")
+        return cell
+        
+    }
+    
 
 }
 
