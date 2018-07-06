@@ -13,7 +13,7 @@
 		4AC29F4320EFC10200AD5352 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AC29F4220EFC10200AD5352 /* Assets.xcassets */; };
 		4AC29F4620EFC10200AD5352 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AC29F4420EFC10200AD5352 /* LaunchScreen.storyboard */; };
 		4AC29F5120EFC10200AD5352 /* Chess_TestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC29F5020EFC10200AD5352 /* Chess_TestTests.swift */; };
-		4AC29F5E20EFCCD600AD5352 /* chessSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC29F5D20EFCCD600AD5352 /* chessSquare.swift */; };
+		4ACF8D6820EFF4F900A6F08F /* CheckerSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACF8D6720EFF4F900A6F08F /* CheckerSquare.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +37,7 @@
 		4AC29F4C20EFC10200AD5352 /* Chess TestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Chess TestTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AC29F5020EFC10200AD5352 /* Chess_TestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chess_TestTests.swift; sourceTree = "<group>"; };
 		4AC29F5220EFC10200AD5352 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4AC29F5D20EFCCD600AD5352 /* chessSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = chessSquare.swift; sourceTree = "<group>"; };
+		4ACF8D6720EFF4F900A6F08F /* CheckerSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckerSquare.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +82,7 @@
 				4AC29F3B20EFC10000AD5352 /* AppDelegate.swift */,
 				4AC29F3F20EFC10000AD5352 /* Main.storyboard */,
 				4AC29F3D20EFC10000AD5352 /* ViewController.swift */,
-				4AC29F5D20EFCCD600AD5352 /* chessSquare.swift */,
+				4ACF8D6720EFF4F900A6F08F /* CheckerSquare.swift */,
 				4AC29F4220EFC10200AD5352 /* Assets.xcassets */,
 				4AC29F4420EFC10200AD5352 /* LaunchScreen.storyboard */,
 				4AC29F4720EFC10200AD5352 /* Info.plist */,
@@ -200,7 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4AC29F5E20EFCCD600AD5352 /* chessSquare.swift in Sources */,
+				4ACF8D6820EFF4F900A6F08F /* CheckerSquare.swift in Sources */,
 				4AC29F3E20EFC10000AD5352 /* ViewController.swift in Sources */,
 				4AC29F3C20EFC10000AD5352 /* AppDelegate.swift in Sources */,
 			);

@@ -1,5 +1,5 @@
 //
-//  chessSquare.swift
+//  CheckerSquare.swift
 //  Chess Test
 //
 //  Created by Alush Benitez on 7/6/18.
@@ -8,7 +8,6 @@
 
 import UIKit
 
-class chessSquare: UICollectionViewCell {
-    
+class CheckerSquare: UICollectionViewCell {
     @IBOutlet weak var cellImage: UIImageView!
 }
