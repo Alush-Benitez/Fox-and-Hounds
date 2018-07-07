@@ -11,13 +11,16 @@ import UIKit
 class CheckerSquare: UICollectionViewCell {
     @IBOutlet weak var cellImage: UIImageView!
     
+    var isOccupied = false
+    
     override var isSelected: Bool{
         didSet{
-            if self.isSelected {
-                self.contentView.backgroundColor = UIColor.gray
-            } else {
-                self.contentView.backgroundColor = UIColor.black
-                
+            if isOccupied {
+                if self.isSelected {
+                    self.contentView.backgroundColor = UIColor.gray
+                } else {
+                    self.contentView.backgroundColor = UIColor.black
+                }
             }
         }
     }

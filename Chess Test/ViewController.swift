@@ -19,6 +19,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     var checkerSquares: [CheckerSquare] = []
     var occupiedSquares: [CheckerSquare] = []
+    
+    var blueTurn = true
 
     
     var count = 0
@@ -56,8 +58,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         if count == 56{
             cell.cellImage.image = UIImage(named: "blue-checker")
             occupiedSquares.append(cell)
+            cell.isOccupied = true
         } else if houndStart.contains(count){
             cell.cellImage.image = UIImage(named: "Red_checker")
+            cell.isOccupied = true
             occupiedSquares.append(cell)
         } else {
             cell.cellImage.image = UIImage(named: "clear-image")
@@ -68,33 +72,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         count += 1
         
         return cell
-        
     }
-    /*
-    @objc func tap(sender:UITapGestureRecognizer){
-        var count1 = 0
-        let selectedPoint = sender.location(in: self.view)
-        
-        for cell in checkerSquares {
-            print(cell)
-            if cell.frame.contains(selectedPoint) {
-                print("sdfoafasd")
-                cell.cellImage.image = UIImage(named: "clearness")
-            }
-            count1 += 1
-        }
-        print("DONE\n\n")
- 
-     
-        for num in 0 ... 63 {
-            if num == 1 || num == 3 || num == 5 || num == 7 || num == 56 {
-                if checkerSquares[num].frame.contains(selectedPoint) {
-                    checkerSquares[num].cellImage.image = UIImage(named: "clearness")
-                }
-            }
-        }
-     
-    }
-*/
 }
 
