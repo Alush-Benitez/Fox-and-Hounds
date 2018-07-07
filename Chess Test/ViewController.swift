@@ -12,11 +12,13 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     @IBOutlet weak var chessboardCollectionView: UICollectionView!
     
-    let blueStart = [1, 3, 5, 7, 8, 10, 12, 14, 17, 19, 21, 23]
-    let redStart = [41, 43, 45, 47, 48, 50, 52, 54, 57, 59, 61, 63]
+    let houndStart = [1, 3, 5, 7]
     
     var whiteSquares: [Int] = []
     var blackSquares: [Int] = []
+    
+    var checkerSquares: [CheckerSquare] = []
+    var occupiedSquares: [CheckerSquare] = []
 
     
     var count = 0
@@ -25,6 +27,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         super.viewDidLoad()
         chessboardCollectionView.dataSource = self
         chessboardCollectionView.delegate = self
+        chessboardCollectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap)))
         
         for num in 0 ... 63 {
             if num % 2 == 1 {
@@ -50,13 +53,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         //Whats gonna be in each cell
         let cell = chessboardCollectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CheckerSquare
         
-        if blueStart.contains(count){
+        if count == 56{
             cell.cellImage.image = UIImage(named: "blue-checker")
-        } else if redStart.contains(count){
+            occupiedSquares.append(cell)
+        } else if houndStart.contains(count){
             cell.cellImage.image = UIImage(named: "Red_checker")
+            occupiedSquares.append(cell)
         } else {
             cell.cellImage.image = UIImage(named: "clear-image")
         }
+        
+        checkerSquares.append(cell)
         
         count += 1
         
@@ -64,6 +71,21 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
     }
     
+    @objc func tap(sender:UITapGestureRecognizer){
+        let selectedPoint = sender.location(in: self.view)
+        for cell in occupiedSquares {
+            print(cell)
+            if cell.frame.contains(selectedPoint) {
+                print("sdfoafasd")
+                cell.cellImage.image = UIImage(named: "clearness")
+            }
+        }
+        print("DONE\n\n")
+    }
+    
 
+
+ 
+    
 }
 
