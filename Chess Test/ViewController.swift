@@ -27,7 +27,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         super.viewDidLoad()
         chessboardCollectionView.dataSource = self
         chessboardCollectionView.delegate = self
-        chessboardCollectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap)))
+        //chessboardCollectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap)))
         
         for num in 0 ... 63 {
             if num % 2 == 1 {
@@ -70,22 +70,31 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         return cell
         
     }
-    
+    /*
     @objc func tap(sender:UITapGestureRecognizer){
+        var count1 = 0
         let selectedPoint = sender.location(in: self.view)
-        for cell in occupiedSquares {
+        
+        for cell in checkerSquares {
             print(cell)
             if cell.frame.contains(selectedPoint) {
                 print("sdfoafasd")
                 cell.cellImage.image = UIImage(named: "clearness")
             }
+            count1 += 1
         }
         print("DONE\n\n")
-    }
-    
-
-
  
-    
+     
+        for num in 0 ... 63 {
+            if num == 1 || num == 3 || num == 5 || num == 7 || num == 56 {
+                if checkerSquares[num].frame.contains(selectedPoint) {
+                    checkerSquares[num].cellImage.image = UIImage(named: "clearness")
+                }
+            }
+        }
+     
+    }
+*/
 }
 

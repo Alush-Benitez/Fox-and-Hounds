@@ -10,4 +10,16 @@ import UIKit
 
 class CheckerSquare: UICollectionViewCell {
     @IBOutlet weak var cellImage: UIImageView!
+    
+    override var isSelected: Bool{
+        didSet{
+            if self.isSelected {
+                self.contentView.backgroundColor = UIColor.gray
+            } else {
+                self.contentView.backgroundColor = UIColor.black
+                
+            }
+        }
+    }
+    
 }
