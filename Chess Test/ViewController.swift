@@ -11,6 +11,8 @@ import UIKit
 var checkerSquares: [CheckerSquare] = []
 var blackSquares: [CheckerSquare] = []
 
+var blueTurn = true
+
 
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -19,8 +21,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     let houndStart = [1, 3, 5, 7]
     
     var occupiedSquares: [CheckerSquare] = []
-    
-    var blueTurn = true
     
     var count = 0
     
@@ -66,7 +66,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         } else {
             if count % 2 == 0 {
                 blackSquares.append(cell)
-                print(count)
             }
         }
         
@@ -88,9 +87,23 @@ class CheckerSquare: UICollectionViewCell {
     var isOccupied = false
     var position = -1
     var color = ""
+    var isGreen = false
+    
+    
     
     override var isSelected: Bool{
         didSet{
+            
+            if isGreen {
+                if blueTurn {
+                    self.cellImage.image = UIImage(named: "blue-checker")
+                } else {
+                    self.cellImage.image = UIImage(named: "Red_checker")
+                }
+                blueTurn = !blueTurn
+                self.isGreen = false
+            }
+            
             if isOccupied {
                 if self.isSelected {
                     self.contentView.backgroundColor = UIColor.gray
@@ -104,6 +117,7 @@ class CheckerSquare: UICollectionViewCell {
                     }
                     for cell in movementOptions {
                         cell.contentView.backgroundColor = UIColor.green
+                        cell.isGreen = true
                     }
                     
                 } else {
@@ -111,11 +125,15 @@ class CheckerSquare: UICollectionViewCell {
                     
                     for checker in blackSquares {
                         checker.contentView.backgroundColor = UIColor.black
+                        //checker.isGreen = false
                     }
                 }
             }
         }
     }
+    
+    
+    
     
     func findAvalibleTopSquares(position: Int) -> [CheckerSquare]{
         let row = (position + 8) / 8
