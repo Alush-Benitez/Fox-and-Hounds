@@ -106,20 +106,11 @@ class CheckerSquare: UICollectionViewCell {
             
             if isOccupied {
                 if self.isSelected {
-                    self.contentView.backgroundColor = UIColor.gray
-                    var movementOptions: [CheckerSquare] = []
-                    
-                    if self.color == "red" {
-                        movementOptions = findAvalibleBottomSquares(position: self.position)
-                    } else {
-                        movementOptions = findAvalibleTopSquares(position: self.position)
-                        movementOptions += findAvalibleBottomSquares(position: self.position)
+                    if blueTurn && self.color == "blue" {
+                        setUpGreenSquares()
+                    } else if !blueTurn && self.color == "red" {
+                        setUpGreenSquares()
                     }
-                    for cell in movementOptions {
-                        cell.contentView.backgroundColor = UIColor.green
-                        cell.isGreen = true
-                    }
-                    
                 } else {
                     self.contentView.backgroundColor = UIColor.black
                     
@@ -132,6 +123,25 @@ class CheckerSquare: UICollectionViewCell {
         }
     }
     
+    
+    
+    
+    
+    func setUpGreenSquares() {
+            self.contentView.backgroundColor = UIColor.gray
+            var movementOptions: [CheckerSquare] = []
+            
+            if self.color == "red" {
+                movementOptions = findAvalibleBottomSquares(position: self.position)
+            } else {
+                movementOptions = findAvalibleTopSquares(position: self.position)
+                movementOptions += findAvalibleBottomSquares(position: self.position)
+            }
+            for cell in movementOptions {
+                cell.contentView.backgroundColor = UIColor.green
+                cell.isGreen = true
+            }
+    }
     
     
     
@@ -174,6 +184,7 @@ class CheckerSquare: UICollectionViewCell {
         
         return avalible
     }
+    
     
 }
 
