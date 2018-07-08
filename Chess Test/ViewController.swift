@@ -79,6 +79,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 
 
 
+var lastClicked: CheckerSquare? = nil
 
 
 class CheckerSquare: UICollectionViewCell {
@@ -93,13 +94,17 @@ class CheckerSquare: UICollectionViewCell {
     
     override var isSelected: Bool{
         didSet{
-            
             if isGreen {
                 if blueTurn {
                     self.cellImage.image = UIImage(named: "blue-checker")
+                    self.color = "blue"
                 } else {
                     self.cellImage.image = UIImage(named: "Red_checker")
+                    self.color = "red"
                 }
+                self.isOccupied = true
+                lastClicked?.isOccupied = false
+                lastClicked?.cellImage.image = nil
                 blueTurn = !blueTurn
                 self.isGreen = false
             }
@@ -108,6 +113,7 @@ class CheckerSquare: UICollectionViewCell {
                 if self.isSelected {
                     if blueTurn && self.color == "blue" {
                         setUpGreenSquares()
+                        
                     } else if !blueTurn && self.color == "red" {
                         setUpGreenSquares()
                     }
@@ -116,7 +122,6 @@ class CheckerSquare: UICollectionViewCell {
                     
                     for checker in blackSquares {
                         checker.contentView.backgroundColor = UIColor.black
-                        //checker.isGreen = false
                     }
                 }
             }
@@ -128,25 +133,26 @@ class CheckerSquare: UICollectionViewCell {
     
     
     func setUpGreenSquares() {
-            self.contentView.backgroundColor = UIColor.gray
-            var movementOptions: [CheckerSquare] = []
-            
-            if self.color == "red" {
-                movementOptions = findAvalibleBottomSquares(position: self.position)
-            } else {
-                movementOptions = findAvalibleTopSquares(position: self.position)
-                movementOptions += findAvalibleBottomSquares(position: self.position)
-            }
-            for cell in movementOptions {
-                cell.contentView.backgroundColor = UIColor.green
-                cell.isGreen = true
-            }
+        self.contentView.backgroundColor = UIColor.gray
+        var movementOptions: [CheckerSquare] = []
+        
+        if self.color == "red" {
+            movementOptions = findAvalibleBottomSquares(position: self.position)
+        } else {
+            movementOptions = findAvalibleTopSquares(position: self.position)
+            movementOptions += findAvalibleBottomSquares(position: self.position)
+        }
+        for cell in movementOptions {
+            cell.contentView.backgroundColor = UIColor.green
+            cell.isGreen = true
+        }
+        lastClicked = self
     }
     
     
     
     func findAvalibleTopSquares(position: Int) -> [CheckerSquare]{
-        let row = (position + 8) / 8
+        let row = (position - 8) / 8
         let firstInRow = (row * 8)
         let lastInRow = ((row + 1) * 8) - 1
         
