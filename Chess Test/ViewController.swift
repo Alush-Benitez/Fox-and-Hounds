@@ -9,6 +9,7 @@
 import UIKit
 
 var checkerSquares: [CheckerSquare] = []
+var blackSquares: [CheckerSquare] = []
 
 
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -16,9 +17,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     @IBOutlet weak var chessboardCollectionView: UICollectionView!
     
     let houndStart = [1, 3, 5, 7]
-    
-    var whiteSquares: [Int] = []
-    var blackSquares: [Int] = []
     
     var occupiedSquares: [CheckerSquare] = []
     
@@ -30,15 +28,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         super.viewDidLoad()
         chessboardCollectionView.dataSource = self
         chessboardCollectionView.delegate = self
-        
-        for num in 0 ... 63 {
-            if num % 2 == 1 {
-                blackSquares.append(num)
-            } else {
-                whiteSquares.append(num)
-            }
-        }
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,11 +53,22 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             cell.isOccupied = true
             occupiedSquares.append(cell)
             cell.color = "red"
-        } else {
-            cell.cellImage.image = UIImage(named: "clear-image")
-        }
+        } //else {
+            //cell.cellImage.image = UIImage(named: "clear-image")
+        //}
         
         checkerSquares.append(cell)
+        
+        if count < 8 || (count > 15 && count < 24) || (count > 31 && count < 40) || (count > 47 && count < 56){
+            if count % 2 == 1 {
+                blackSquares.append(cell)
+            }
+        } else {
+            if count % 2 == 0 {
+                blackSquares.append(cell)
+                print(count)
+            }
+        }
         
         cell.position = count
         count += 1
@@ -102,14 +102,16 @@ class CheckerSquare: UICollectionViewCell {
                         movementOptions = findAvalibleTopSquares(position: self.position)
                         movementOptions += findAvalibleBottomSquares(position: self.position)
                     }
-                    print(self.color)
                     for cell in movementOptions {
                         cell.contentView.backgroundColor = UIColor.green
-                        print(cell.position)
                     }
                     
                 } else {
                     self.contentView.backgroundColor = UIColor.black
+                    
+                    for checker in blackSquares {
+                        checker.contentView.backgroundColor = UIColor.black
+                    }
                 }
             }
         }
