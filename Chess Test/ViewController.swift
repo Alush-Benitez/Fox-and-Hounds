@@ -106,7 +106,9 @@ class CheckerSquare: UICollectionViewCell {
                 lastClicked?.isOccupied = false
                 lastClicked?.cellImage.image = nil
                 blueTurn = !blueTurn
-                self.isGreen = false
+                for square in blackSquares {
+                    square.isGreen = false
+                }
             }
             
             if isOccupied {
@@ -161,10 +163,10 @@ class CheckerSquare: UICollectionViewCell {
         
         var avalible: [CheckerSquare] = []
         
-        if !(topLeft < 0 || topLeft < firstInRow) {
+        if (!(topLeft < 0 || topLeft < firstInRow)) && checkerSquares[topLeft].isOccupied == false{
             avalible.append(checkerSquares[topLeft])
         }
-        if !(topRight < 0 || topRight > lastInRow) {
+        if (!(topRight < 0 || topRight > lastInRow)) && checkerSquares[topRight].isOccupied == false {
             avalible.append(checkerSquares[topRight])
         }
         
@@ -181,10 +183,10 @@ class CheckerSquare: UICollectionViewCell {
         
         var avalible: [CheckerSquare] = []
         
-        if !(bottomLeft > 63 || bottomLeft < firstInRow) {
+        if (!(bottomLeft > 63 || bottomLeft < firstInRow)) && checkerSquares[bottomLeft].isOccupied == false {
             avalible.append(checkerSquares[bottomLeft])
         }
-        if !(bottomRight > 63 || bottomRight > lastInRow) {
+        if (!(bottomRight > 63 || bottomRight > lastInRow)) && checkerSquares[bottomRight].isOccupied == false {
             avalible.append(checkerSquares[bottomRight])
         }
         
