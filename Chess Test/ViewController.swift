@@ -14,7 +14,6 @@ var checkerSquares: [CheckerSquare] = []
 var blackSquares: [CheckerSquare] = []
 
 var lastClicked: CheckerSquare? = nil
-var lastMovementOptions: [CheckerSquare] = []
 var firstWinCheck = true
 
 var blueTurn = true
@@ -24,9 +23,6 @@ var bluePosition = -1
 
 //STATS FOR END GAME
 var totalMoves = 0
-var timeSpent = 0
-var redTurnTime = 0
-var blueTurnTime = 0
 var blueMovesForwards = 0
 var blueMovesBackwards = 0
 var redMoves = 0
@@ -50,11 +46,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         super.viewDidLoad()
         chessboardCollectionView.dataSource = self
         chessboardCollectionView.delegate = self
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        showStatsLabel.setTitle("", for: UIControlState.normal)
-        resetButton.setTitle("", for: UIControlState.normal)
     }
 
     override func didReceiveMemoryWarning() {
@@ -99,32 +90,21 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         return cell
     }
-    /*
-    func displayMessage(message:String){
-        let alert = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: "Return to Board", style: .default) {
-            (action) -> Void in self.addButtons()
-        }
-        alert.addAction(alertAction)
-        present(alert, animated: true, completion: nil)
-    }
- */
     
     func addButtons(){
-        //showStatsLabel.setTitle("Show Stats", for: UIControlState.normal)
-        //resetButton.setTitle("Reset", for: UIControlState.normal)
+        showStatsLabel.setTitle("Show Stats", for: UIControlState.normal)
         winnerLabel.text = "blah blah wins! yay"
     }
     
-    @IBAction func whenStatsClicked(_ sender: Any) {
-    }
-    
-    @IBAction func whenResetClicked(_ sender: Any) {
+    @IBAction func unwindToInitialViewController(segue: UIStoryboardSegue) {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let dvc = segue.destination as! ViewController2
-        dvc.data = "This came from the second VC"
+        dvc.totalMoves = totalMoves
+        dvc.blueMovesBackwards = blueMovesBackwards
+        dvc.blueMovesForwards = blueMovesForwards
+        dvc.redMoves = redMoves
     }
  
     
@@ -158,21 +138,26 @@ class CheckerSquare: UICollectionViewCell {
                         self.color = "blue"
                         if position / 8 == 0 {
                             hasWinner = true
-                            //ViewController().displayMessage(message: "Blue Wins!")
-                            //ViewController().addButtons()
+                            ViewController().addButtons()
                         }
                         bluePosition = position
-                        
+                        if (lastClicked?.position)! < self.position {
+                            blueMovesBackwards += 1
+                        } else {
+                            blueMovesForwards += 1
+                        }
                     } else {
                         self.cellImage.image = UIImage(named: "Red_checker")
                         self.color = "red"
                         if checkMovementOptions(position: bluePosition).count == 0 {
-                            print("asdnfljbfjdkhljdfkjkdhljkg")
                             hasWinner = true
+                            ViewController().addButtons()
                         }
+                        redMoves += 1
                     }
                     lastClicked?.cellImage.image = nil
                     blueTurn = !blueTurn
+                    totalMoves += 1
                     for square in blackSquares {
                         square.isGreen = false
                     }
@@ -182,16 +167,7 @@ class CheckerSquare: UICollectionViewCell {
                     if self.isSelected {
                         lastClicked = self
                         if blueTurn && self.color == "blue" {
-                            lastMovementOptions = setUpGreenSquares()
-                            /*
-                            print(lastMovementOptions.count)
-                            if lastMovementOptions.count == 0 {
-                                print("asdnfljbfjdkhljdfkjkdhljkg")
-                                hasWinner = true
-                                //ViewController().displayMessage(message: "Red Wins!")
-                                //ViewController().addButtons()
-                            }
-                            */
+                            setUpGreenSquares()
                         } else if !blueTurn && self.color == "red" {
                             setUpGreenSquares()
                         }
@@ -203,24 +179,13 @@ class CheckerSquare: UICollectionViewCell {
                         }
                     }
                 }
-                /*
-                if blueTurn && self.color == "blue" {
-                    if lastMovementOptions.count == 0 {
-                        hasWinner = true
-                        //ViewController().displayMessage(message: "Red Wins!")
-                        //ViewController().addButtons()
-                    }
-                }
- */
             }
         }
     }
     
     
     
-    
-    
-    func setUpGreenSquares() -> [CheckerSquare] {
+    func setUpGreenSquares(){
         self.contentView.backgroundColor = UIColor.gray
         var movementOptions: [CheckerSquare] = []
 
@@ -234,8 +199,6 @@ class CheckerSquare: UICollectionViewCell {
             cell.contentView.backgroundColor = UIColor.green
             cell.isGreen = true
         }
-        
-        return movementOptions
     }
     
     
@@ -244,9 +207,7 @@ class CheckerSquare: UICollectionViewCell {
         var movementOptions: [CheckerSquare] = []
         
         movementOptions = findAvalibleTopSquares(position: position)
-        print(movementOptions.count)
         movementOptions += findAvalibleBottomSquares(position: position)
-        print(movementOptions.count)
         return movementOptions
     }
     

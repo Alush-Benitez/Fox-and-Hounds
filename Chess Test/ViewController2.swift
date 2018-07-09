@@ -10,12 +10,24 @@ import UIKit
 
 class ViewController2: UIViewController {
 
-    var data = ""
+    var totalMoves = 0
+    var redMoves = 0
+    var blueMovesForwards = 0
+    var blueMovesBackwards = 0
+    
+    @IBOutlet weak var winnerTitle: UILabel!
+    @IBOutlet weak var totalMovesLabel: UILabel!
+    @IBOutlet weak var redMovesLabel: UILabel!
+    @IBOutlet weak var blueMovesForwardLabel: UILabel!
+    @IBOutlet weak var blueMovesBackwardLabel: UILabel!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        totalMovesLabel.text = String(totalMoves)
+        redMovesLabel.text = String(redMoves)
+        blueMovesForwardLabel.text = String(blueMovesForwards)
+        blueMovesBackwardLabel.text = String(blueMovesBackwards)
     }
 
     override func didReceiveMemoryWarning() {
