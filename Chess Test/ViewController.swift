@@ -20,6 +20,8 @@ var firstWinCheck = true
 var blueTurn = true
 var hasWinner = false
 
+var bluePosition = -1
+
 //STATS FOR END GAME
 var totalMoves = 0
 var timeSpent = 0
@@ -149,22 +151,26 @@ class CheckerSquare: UICollectionViewCell {
         didSet{
             if !hasWinner {
                 if isGreen {
+                    self.isOccupied = true
+                    lastClicked?.isOccupied = false
                     if blueTurn {
                         self.cellImage.image = UIImage(named: "blue-checker")
                         self.color = "blue"
-                        print(position)
                         if position / 8 == 0 {
-                            print("nkfjsadlknfbkjhafklndsvdkifklasv")
                             hasWinner = true
                             //ViewController().displayMessage(message: "Blue Wins!")
                             //ViewController().addButtons()
                         }
+                        bluePosition = position
+                        
                     } else {
                         self.cellImage.image = UIImage(named: "Red_checker")
                         self.color = "red"
+                        if checkMovementOptions(position: bluePosition).count == 0 {
+                            print("asdnfljbfjdkhljdfkjkdhljkg")
+                            hasWinner = true
+                        }
                     }
-                    self.isOccupied = true
-                    lastClicked?.isOccupied = false
                     lastClicked?.cellImage.image = nil
                     blueTurn = !blueTurn
                     for square in blackSquares {
@@ -177,6 +183,15 @@ class CheckerSquare: UICollectionViewCell {
                         lastClicked = self
                         if blueTurn && self.color == "blue" {
                             lastMovementOptions = setUpGreenSquares()
+                            /*
+                            print(lastMovementOptions.count)
+                            if lastMovementOptions.count == 0 {
+                                print("asdnfljbfjdkhljdfkjkdhljkg")
+                                hasWinner = true
+                                //ViewController().displayMessage(message: "Red Wins!")
+                                //ViewController().addButtons()
+                            }
+                            */
                         } else if !blueTurn && self.color == "red" {
                             setUpGreenSquares()
                         }
@@ -196,8 +211,7 @@ class CheckerSquare: UICollectionViewCell {
                         //ViewController().addButtons()
                     }
                 }
-                */
- 
+ */
             }
         }
     }
@@ -221,6 +235,18 @@ class CheckerSquare: UICollectionViewCell {
             cell.isGreen = true
         }
         
+        return movementOptions
+    }
+    
+    
+    
+    func checkMovementOptions(position: Int) -> [CheckerSquare]{
+        var movementOptions: [CheckerSquare] = []
+        
+        movementOptions = findAvalibleTopSquares(position: position)
+        print(movementOptions.count)
+        movementOptions += findAvalibleBottomSquares(position: position)
+        print(movementOptions.count)
         return movementOptions
     }
     
