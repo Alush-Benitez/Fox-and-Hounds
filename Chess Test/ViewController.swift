@@ -8,26 +8,51 @@
 
 import UIKit
 
+
+//GLOBAL VARIABLES
 var checkerSquares: [CheckerSquare] = []
 var blackSquares: [CheckerSquare] = []
 
+var lastClicked: CheckerSquare? = nil
+var lastMovementOptions: [CheckerSquare] = []
+var firstWinCheck = true
+
 var blueTurn = true
+var hasWinner = false
+
+//STATS FOR END GAME
+var totalMoves = 0
+var timeSpent = 0
+var redTurnTime = 0
+var blueTurnTime = 0
+var blueMovesForwards = 0
+var blueMovesBackwards = 0
+var redMoves = 0
 
 
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     @IBOutlet weak var chessboardCollectionView: UICollectionView!
+    @IBOutlet weak var winnerLabel: UILabel!
+    @IBOutlet weak var showStatsLabel: UIButton!
+    @IBOutlet weak var resetButton: UIButton!
     
     let houndStart = [1, 3, 5, 7]
     
     var occupiedSquares: [CheckerSquare] = []
     
     var count = 0
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         chessboardCollectionView.dataSource = self
         chessboardCollectionView.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        showStatsLabel.setTitle("", for: UIControlState.normal)
+        resetButton.setTitle("", for: UIControlState.normal)
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,9 +78,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             cell.isOccupied = true
             occupiedSquares.append(cell)
             cell.color = "red"
-        } //else {
-            //cell.cellImage.image = UIImage(named: "clear-image")
-        //}
+        }
         
         checkerSquares.append(cell)
         
@@ -74,13 +97,43 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         return cell
     }
+    /*
+    func displayMessage(message:String){
+        let alert = UIAlertController(title: message, message: nil, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Return to Board", style: .default) {
+            (action) -> Void in self.addButtons()
+        }
+        alert.addAction(alertAction)
+        present(alert, animated: true, completion: nil)
+    }
+ */
+    
+    func addButtons(){
+        //showStatsLabel.setTitle("Show Stats", for: UIControlState.normal)
+        //resetButton.setTitle("Reset", for: UIControlState.normal)
+        winnerLabel.text = "blah blah wins! yay"
+    }
+    
+    @IBAction func whenStatsClicked(_ sender: Any) {
+    }
+    
+    @IBAction func whenResetClicked(_ sender: Any) {
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let dvc = segue.destination as! ViewController2
+        dvc.data = "This came from the second VC"
+    }
+ 
+    
 }
 
 
 
 
-var lastClicked: CheckerSquare? = nil
 
+
+//CHECKER SQUARE CLASS
 
 class CheckerSquare: UICollectionViewCell {
     @IBOutlet weak var cellImage: UIImageView!
@@ -94,38 +147,57 @@ class CheckerSquare: UICollectionViewCell {
     
     override var isSelected: Bool{
         didSet{
-            if isGreen {
-                if blueTurn {
-                    self.cellImage.image = UIImage(named: "blue-checker")
-                    self.color = "blue"
-                } else {
-                    self.cellImage.image = UIImage(named: "Red_checker")
-                    self.color = "red"
+            if !hasWinner {
+                if isGreen {
+                    if blueTurn {
+                        self.cellImage.image = UIImage(named: "blue-checker")
+                        self.color = "blue"
+                        print(position)
+                        if position / 8 == 0 {
+                            print("nkfjsadlknfbkjhafklndsvdkifklasv")
+                            hasWinner = true
+                            //ViewController().displayMessage(message: "Blue Wins!")
+                            //ViewController().addButtons()
+                        }
+                    } else {
+                        self.cellImage.image = UIImage(named: "Red_checker")
+                        self.color = "red"
+                    }
+                    self.isOccupied = true
+                    lastClicked?.isOccupied = false
+                    lastClicked?.cellImage.image = nil
+                    blueTurn = !blueTurn
+                    for square in blackSquares {
+                        square.isGreen = false
+                    }
                 }
-                self.isOccupied = true
-                lastClicked?.isOccupied = false
-                lastClicked?.cellImage.image = nil
-                blueTurn = !blueTurn
-                for square in blackSquares {
-                    square.isGreen = false
-                }
-            }
             
-            if isOccupied {
-                if self.isSelected {
-                    if blueTurn && self.color == "blue" {
-                        setUpGreenSquares()
+                if isOccupied {
+                    if self.isSelected {
+                        lastClicked = self
+                        if blueTurn && self.color == "blue" {
+                            lastMovementOptions = setUpGreenSquares()
+                        } else if !blueTurn && self.color == "red" {
+                            setUpGreenSquares()
+                        }
+                    } else {
+                        self.contentView.backgroundColor = UIColor.black
                         
-                    } else if !blueTurn && self.color == "red" {
-                        setUpGreenSquares()
-                    }
-                } else {
-                    self.contentView.backgroundColor = UIColor.black
-                    
-                    for checker in blackSquares {
-                        checker.contentView.backgroundColor = UIColor.black
+                        for checker in blackSquares {
+                            checker.contentView.backgroundColor = UIColor.black
+                        }
                     }
                 }
+                /*
+                if blueTurn && self.color == "blue" {
+                    if lastMovementOptions.count == 0 {
+                        hasWinner = true
+                        //ViewController().displayMessage(message: "Red Wins!")
+                        //ViewController().addButtons()
+                    }
+                }
+                */
+ 
             }
         }
     }
@@ -134,10 +206,10 @@ class CheckerSquare: UICollectionViewCell {
     
     
     
-    func setUpGreenSquares() {
+    func setUpGreenSquares() -> [CheckerSquare] {
         self.contentView.backgroundColor = UIColor.gray
         var movementOptions: [CheckerSquare] = []
-        
+
         if self.color == "red" {
             movementOptions = findAvalibleBottomSquares(position: self.position)
         } else {
@@ -148,7 +220,8 @@ class CheckerSquare: UICollectionViewCell {
             cell.contentView.backgroundColor = UIColor.green
             cell.isGreen = true
         }
-        lastClicked = self
+        
+        return movementOptions
     }
     
     
@@ -192,7 +265,5 @@ class CheckerSquare: UICollectionViewCell {
         
         return avalible
     }
-    
-    
 }
 
