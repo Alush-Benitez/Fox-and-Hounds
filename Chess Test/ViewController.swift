@@ -33,19 +33,44 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     @IBOutlet weak var chessboardCollectionView: UICollectionView!
     @IBOutlet weak var winnerLabel: UILabel!
     @IBOutlet weak var showStatsLabel: UIButton!
-    @IBOutlet weak var resetButton: UIButton!
     
     let houndStart = [1, 3, 5, 7]
     
     var occupiedSquares: [CheckerSquare] = []
     
     var count = 0
+    
+    var first = true
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         chessboardCollectionView.dataSource = self
         chessboardCollectionView.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if !first {
+            for square in blackSquares {
+                square.cellImage.image = nil
+                square.isOccupied = false
+                square.position = -1
+                square.color = ""
+                square.isGreen = false
+                totalMoves = 0
+                blueMovesForwards = 0
+                blueMovesBackwards = 0
+                redMoves = 0
+                bluePosition = -1
+                lastClicked = nil
+                checkerSquares = []
+            }
+            count = 0
+            chessboardCollectionView.reloadData()
+            hasWinner = false
+            blueTurn = true
+        }
+        first = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,6 +85,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //Whats gonna be in each cell
         let cell = chessboardCollectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CheckerSquare
+        
+        
         
         if count == 56{
             cell.cellImage.image = UIImage(named: "blue-checker")
@@ -92,8 +119,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func addButtons(){
-        showStatsLabel.setTitle("Show Stats", for: UIControlState.normal)
-        winnerLabel.text = "blah blah wins! yay"
+        //showStatsLabel.setTitle("Show Stats", for: UIControlState.normal)
+        //winnerLabel.text = "blah blah wins! yay"
     }
     
     @IBAction func unwindToInitialViewController(segue: UIStoryboardSegue) {
@@ -106,8 +133,13 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         dvc.blueMovesForwards = blueMovesForwards
         dvc.redMoves = redMoves
     }
- 
     
+    func displayMessage(message:String){
+        let alert = UIAlertController(title: message, message: nil, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(alertAction)
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 
@@ -125,8 +157,6 @@ class CheckerSquare: UICollectionViewCell {
     var color = ""
     var isGreen = false
     
-    
-    
     override var isSelected: Bool{
         didSet{
             if !hasWinner {
@@ -138,6 +168,7 @@ class CheckerSquare: UICollectionViewCell {
                         self.color = "blue"
                         if position / 8 == 0 {
                             hasWinner = true
+                            //ViewController().displayMessage(message: "Blue Wins!")
                             ViewController().addButtons()
                         }
                         bluePosition = position
@@ -151,6 +182,7 @@ class CheckerSquare: UICollectionViewCell {
                         self.color = "red"
                         if checkMovementOptions(position: bluePosition).count == 0 {
                             hasWinner = true
+                            ViewController().displayMessage(message: "Red Wins!")
                             ViewController().addButtons()
                         }
                         redMoves += 1
@@ -188,7 +220,6 @@ class CheckerSquare: UICollectionViewCell {
     func setUpGreenSquares(){
         self.contentView.backgroundColor = UIColor.gray
         var movementOptions: [CheckerSquare] = []
-
         if self.color == "red" {
             movementOptions = findAvalibleBottomSquares(position: self.position)
         } else {
@@ -228,6 +259,10 @@ class CheckerSquare: UICollectionViewCell {
         }
         if (!(topRight < 0 || topRight > lastInRow)) && checkerSquares[topRight].isOccupied == false {
             avalible.append(checkerSquares[topRight])
+        }
+        
+        for square in avalible {
+            print(square.position)
         }
         
         return avalible
